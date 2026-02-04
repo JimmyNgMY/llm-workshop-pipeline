@@ -1,0 +1,41 @@
+name: LLM CI Stage 1 - Testing
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Setup for DeepEval (Python)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install DeepEval Dependencies
+        working-directory: ./deepeval-tests
+        run: |
+          pip install deepeval pytest
+          # If you have a requirements file in this folder:
+          # pip install -r requirements.txt 
+
+      - name: Run DeepEval Tests
+        working-directory: ./deepeval-tests
+        run: pytest
+
+      # Setup for Promptfoo (Node/NPM)
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run Promptfoo Eval
+        working-directory: ./promptfoo-tests
+        run: |
+          npx promptfoo@latest eval
