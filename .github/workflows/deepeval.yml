@@ -1,0 +1,27 @@
+name: DeepEval Tests
+on:
+  push:
+    paths:
+      - 'deepeval-tests/**'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        working-directory: ./deepeval-tests
+        run: |
+          pip install -r requirements.txt
+      - name: Run DeepEval
+        working-directory: ./deepeval-tests
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          # Runs all tests as specified in DEEPEVAL_INSTRUCTIONS.md
+          deepeval test run test_classify.py test_sentiment.py test_summarize.py test_intent.py -n 4
