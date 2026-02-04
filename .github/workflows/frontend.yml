@@ -24,4 +24,4 @@ jobs:
         with:
           context: ./llm-frontend-python
           push: true
-          tags: ghcr.io/${{ github.repository }}/llm-frontend:latest
+          tags: ghcr.io/${{ env.REPO_LOWER }}/llm-frontend:latest
